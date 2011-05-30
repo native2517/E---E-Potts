@@ -1266,6 +1266,12 @@ div.status a:hover {
 .img-left .views-row {
   clear: right;
 }
+
+/*-----custom styling----*/
+.field-field-image {
+    float: left;
+}
+
 /*-----fonts----*/
 .serif-heading h1,
 .serif-heading h1 a,
