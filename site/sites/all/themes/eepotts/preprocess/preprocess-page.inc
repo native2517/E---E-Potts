@@ -147,12 +147,17 @@ switch (arg(0)) {
     $vars['body_attributes']['id'][] = 'page-'. $catch_all;
   break;
 }
+
 // if side bar is active
-if (!$vars['sidebar']) {
+if (!$vars['sidebar_right'] && !$vars['sidebar_left']) {
     // Both regions are empty
     $vars['body_attributes']['class'][] = 'no-sidebar';
-} else if ($vars['sidebar']) {
-    $vars['body_attributes']['class'][] = 'has-sidebar';
+} else if ($vars['sidebar_left']) {
+    $vars['body_attributes']['class'][] = 'has-sidebar-left';
+} else if ($vars['sidebar_right']) {
+    $vars['body_attributes']['class'][] = 'has-sidebar-right';
+} else if ($vars['sidebar_right'] && $vars['sidebar_left']) {
+    $vars['body_attributes']['class'][] = 'has-sidebar-both';
 }
 
 //logout text

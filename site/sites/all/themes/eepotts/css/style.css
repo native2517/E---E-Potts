@@ -295,11 +295,11 @@ blockquote {
   padding: 18px 15px;
 }
 #content-top {
-  background: transparent url(../images/content-topbg.jpg) no-repeat 0 0;
+  background-color: #EF9F20;
   color: #fff;
   display: block;
-  height: 224px;
-	padding: 10px 10px 22px;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 #content-top h3,
 #content-top a {
@@ -312,8 +312,6 @@ blockquote {
 }
 #content-top .block {
   background: transparent url(../images/content-top-space.jpg) no-repeat 100% 0;
-  float: left;
-  height: 208px;
   margin: 8px;
   padding: 0 16px 0 8px;
 }
@@ -345,16 +343,28 @@ blockquote {
 #main {
   clear: none;
 }
-.has-sidebar .sidebar {
+.has-sidebar-left .sidebar {
   float: left;
   padding: 10px 13px;
   width: 258px;
 }
-.has-sidebar #main {
+.has-sidebar-left #main {
  float: right;
  padding: 10px 0;
  width: 616px;
 }
+.has-sidebar-right .sidebar {
+  float: right;
+  padding: 10px 13px;
+  width: 258px;
+}
+.has-sidebar-right #main {
+ float: left;
+ padding: 10px 0;
+ width: 616px;
+}
+
+
 .right .sidebar {
   float: right;
 }

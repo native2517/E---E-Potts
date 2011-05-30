@@ -1,0 +1,8 @@
+; $Id$
+name = Product Filter
+version = 1.0
+description = "Module produces filter blocks for 'product' content types."
+core = 6.x
+package = "Native Custom Modules"
+
+PHP = 4.3

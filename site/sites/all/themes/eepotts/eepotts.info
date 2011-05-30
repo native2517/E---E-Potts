@@ -9,7 +9,8 @@ engine = phptemplate
 ; Regions
 regions[content_top] = Content top
 regions[nav] = Navigation
-regions[sidebar] = Sidebar
+regions[sidebar_left] = Sidebar Left
+regions[sidebar_right] = Sidebar Right
 regions[content_inner] = Content inner
 regions[node_inner] = Region within node content
 regions[content_bottom] = Content bottom

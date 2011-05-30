@@ -155,9 +155,14 @@
         <?php print $content; ?>
         </div><!-- end content -->
       </div><!-- end main -->
-      <?php if($sidebar): ?>
-        <div class="sidebar">
-          <?php print $sidebar; ?>
+      <?php if($sidebar_left): ?>
+        <div class="sidebar-left sidebar">
+          <?php print $sidebar_left; ?>
+        </div>
+      <?php endif; ?>
+      <?php if($sidebar_right): ?>
+        <div class="sidebar-right sidebar">
+          <?php print $sidebar_right; ?>
         </div>
       <?php endif; ?>
       <div class="clear"> </div>

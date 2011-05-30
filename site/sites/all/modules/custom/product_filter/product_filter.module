@@ -1,0 +1,59 @@
+<?php
+
+function product_filter_block($op = 'list', $delta = 0, $edit = array()) {
+    switch ($op) {
+        case 'list':
+
+            $blocks['product_block'] = array(
+                'info' => t('Product filter block'),
+                'weight' => 0,
+            );
+
+            return $blocks;
+
+            break;
+
+        case 'view':
+
+            switch ($delta) {
+                case 'product_block':
+                    drupal_add_css(drupal_get_path('module', 'product_filter') . "/css/product_filter.css");
+
+                    $block = array(
+                        'subject' => t('Product filter block'),
+                        'content' => drupal_get_form("product_filter_block_1"),
+                    );
+
+                    break;
+            }
+
+            return $block;
+
+            break;
+    }
+}
+
+function product_filter_block_1($form) {
+
+    $form['title'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Product name'),
+        '#size' => 60,
+        '#maxlength' => 128,
+        '#required' => TRUE,
+    );
+    
+    $form['brand'] = array(
+        '#type' => 'select',
+        '#title' => t('Brand'),
+        '#options' => array(
+            'title' => t('Titles only'),
+            'teaser' => t('Titles plus teaser'),
+            'fulltext' => t('Full text'),
+        ),
+    );
+
+    $form['submit'] = array('#type' => 'submit', '#value' => t('Search'));
+
+    return $form;
+}
