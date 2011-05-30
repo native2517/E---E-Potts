@@ -1,11 +1,18 @@
 <?php
 
 function product_filter_block($op = 'list', $delta = 0, $edit = array()) {
+    drupal_add_css(drupal_get_path('module', 'product_filter') . "/css/product_filter.css");
+
     switch ($op) {
         case 'list':
 
             $blocks['product_block'] = array(
                 'info' => t('Product filter block'),
+                'weight' => 0,
+            );
+
+            $blocks['product_block_featured'] = array(
+                'info' => t('Product featured block'),
                 'weight' => 0,
             );
 
@@ -17,11 +24,19 @@ function product_filter_block($op = 'list', $delta = 0, $edit = array()) {
 
             switch ($delta) {
                 case 'product_block':
-                    drupal_add_css(drupal_get_path('module', 'product_filter') . "/css/product_filter.css");
 
                     $block = array(
                         'subject' => t('Product filter block'),
                         'content' => drupal_get_form("product_filter_block_1"),
+                    );
+
+                    break;
+
+                case 'product_block_featured':
+
+                    $block = array(
+                        'subject' => t('Featured Products'),
+                        'content' => product_filter_block_2(),
                     );
 
                     break;
@@ -42,7 +57,7 @@ function product_filter_block_1($form) {
         '#maxlength' => 128,
         '#required' => TRUE,
     );
-    
+
     $form['brand'] = array(
         '#type' => 'select',
         '#title' => t('Brand'),
@@ -56,4 +71,28 @@ function product_filter_block_1($form) {
     $form['submit'] = array('#type' => 'submit', '#value' => t('Search'));
 
     return $form;
+}
+
+function product_filter_block_2() {
+    $projects = array();
+    $filters = array();
+
+    $result = db_query("SELECT nid FROM {node} WHERE type = '%s'", "portfolio");
+
+    while ($data = db_fetch_object($result)) {
+        $node = node_load($data->nid);
+
+        foreach ($node->field_services as $service) {
+            $filters["filter_" . $service["nid"]] = db_fetch_object(db_query("SELECT title FROM {node} WHERE nid = %d", $service["nid"]))->title;
+        }
+
+        $projects[] = array(
+            'image' => theme('imagecache', 'portfolio-quicksand', $node->field_image[0]['filepath']),
+            'title' => $node->title,
+            'path' => "node/{$node->nid}",
+            'id' => "filter_" . $node->field_services[0]["nid"],
+        );
+    }
+
+    return theme("quicksand_block", $projects, $filters);
 }
