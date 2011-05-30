@@ -1,0 +1,85 @@
+<?php 
+/*
+ * TODO: Format the date and time properly for tweets
+ * TODO: Ensure that the tweets are updated when the settings are saved.
+ *
+ *
+*/
+
+function home_page_theme($existing, $type, $theme, $path) {
+				$path = drupal_get_path('module', 'home_page') .'/theme';
+
+				return array(
+												'quicksand_block' => array(
+																				'arguments' => array(
+																												'nodes' => NULL,
+																												'filters' => NULL,
+																				),
+																				'template' => 'quicksand_block',
+																				'path' => $path,
+												),
+				);
+}
+
+function home_page_block($op = 'list', $delta = 0, $edit = array()) {
+				switch($op) {
+								case 'list':
+
+												$blocks['portfolio_block'] = array(
+																				'info' => t('Portfolio block'),
+																				'weight' => 0,
+												);
+
+												return $blocks;
+
+												break;
+
+								case 'view':
+
+												switch ($delta) {
+																case 'portfolio_block':
+																				drupal_add_css(drupal_get_path('module', 'home_page') . "/css/home_page.css");
+
+																				//jquery_ui_add('ui');
+																				jquery_plugin_add("cycle");
+
+																				drupal_add_js(drupal_get_path('module', 'home_page') . "/js/jquery.quicksand.js");
+																				drupal_add_js(drupal_get_path('module', 'home_page') . "/js/home_page.js");
+
+																				$block = array(
+																												'subject' => t('Portfolio block'),
+																												'content' => home_page_block_1(),
+																				);
+
+																				break;
+												}
+
+												return $block;
+
+												break;
+				}
+}
+
+function home_page_block_1() {
+				$projects = array();
+				$filters = array();
+
+				$result = db_query("SELECT nid FROM {node} WHERE type = '%s'", "portfolio");
+
+				while($data = db_fetch_object($result)) {
+								$node = node_load($data->nid);
+
+								foreach($node->field_services as $service) {
+												$filters["filter_" . $service["nid"]] = db_fetch_object(db_query("SELECT title FROM {node} WHERE nid = %d", $service["nid"]))->title;
+								}
+
+								$projects[] = array(
+																'image' => theme('imagecache', 'portfolio-quicksand', $node->field_image[0]['filepath']),
+																'title' => $node->title,
+																'path' => "node/{$node->nid}",
+																'id' => "filter_" . $node->field_services[0]["nid"],
+								);
+				}
+
+				return theme("quicksand_block", $projects, $filters);
+}

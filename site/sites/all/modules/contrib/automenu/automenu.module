@@ -1,0 +1,96 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_nodeapi().
+ */
+function automenu_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+  switch ($op) {
+    case 'insert':
+    case 'update':
+      $args = array('node' => $node);
+      $hook = 'automenuapi';
+
+      foreach (module_implements($hook) as $module) {
+        $params = module_invoke($module, 'automenuapi', 'add', $args);
+        automenu_add_menu_link($params);
+      }
+
+      break;
+  }
+}
+
+/**
+ * Save a menu link.
+ */
+function automenu_add_menu_link($params) {
+  if ($params['success']) {
+    $new_menu = array(
+        'menu_name' => $params['menu_name'],
+        'link_path' => $params['link_path'],
+        'link_title' => $params['link_title'],
+        'plid' => $params['plid'],
+        'hidden' => $params['hidden'],
+        'expanded' => $params['expanded'],
+        'options' => array('alter' => TRUE),
+    );
+
+    if ($params['options'] != NULL) {
+      $new_menu['options'] = $params['options'];
+    }
+
+    if ($params['weight'] != NULL) {
+      $new_menu['weight'] = $params['weight'];
+    }
+
+    if ($params['mlid'] != NULL) {
+      $new_menu['mlid'] = $params['mlid'];
+    }
+
+    if (!menu_link_save($new_menu)) {
+      drupal_set_message(t('There was an error saving the auto-menu link.'), 'error');
+    }
+    else {
+      drupal_set_message(t('The page was automatically added/updated to: !menu.', array('!menu' => $params['menu_name'])));
+    }
+  }
+}
+
+/**
+ * Implementation of hook_form_alter().
+ */
+function automenu_form_alter(&$form, $form_state, $form_id) {
+  $params = array(
+      'form' => $form,
+      'form_state' => $form_state,
+      'form_id' => $form_id,
+  );
+
+  $hook = 'automenuapi';
+
+  foreach (module_implements($hook) as $module) {
+    $params['form'] = module_invoke($module, 'automenuapi', 'configure', $params);
+  }
+
+  $form = $params['form'];
+}
+
+/**
+ * Implementation of hook_taxonomy().
+ */
+function automenu_taxonomy($op, $type, $array = NULL) {
+  $params = array(
+      'op' => $op,
+      'type' => $type,
+      'array' => $array,
+  );
+
+  $hook = 'automenuapi';
+
+  foreach (module_implements($hook) as $module) {
+    if (module_exists($module)) {
+      $result = module_invoke($module, 'automenuapi', 'taxonomy', $params);
+      automenu_add_menu_link($result);
+    }
+  }
+}

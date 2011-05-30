@@ -1,19 +1,14 @@
 <?php
-// $Id: xmlrpc.php,v 1.20 2010/10/02 01:22:41 dries Exp $
+// $Id: xmlrpc.php,v 1.15 2005/12/10 19:26:47 dries Exp $
 
 /**
  * @file
  * PHP page for handling incoming XML-RPC requests from clients.
  */
 
-/**
- * Root directory of Drupal installation.
- */
-define('DRUPAL_ROOT', getcwd());
-
-include_once DRUPAL_ROOT . '/includes/bootstrap.inc';
+include_once './includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-include_once DRUPAL_ROOT . '/includes/xmlrpc.inc';
-include_once DRUPAL_ROOT . '/includes/xmlrpcs.inc';
+include_once './includes/xmlrpc.inc';
+include_once './includes/xmlrpcs.inc';
 
 xmlrpc_server(module_invoke_all('xmlrpc'));

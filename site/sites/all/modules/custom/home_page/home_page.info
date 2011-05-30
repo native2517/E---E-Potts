@@ -1,0 +1,10 @@
+; $Id$
+name = Home Page Blocks
+version = 1.0
+description = "Custom blocks for use on the home page."
+core = 6.x
+package = "Greensky Architecture"
+
+dependencies[] = jquery_ui
+dependencies[] = jquery_plugin
+PHP = 4.3

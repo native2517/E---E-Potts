@@ -1,0 +1,66 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_automenuapi().
+ */
+function automenu_og_automenuapi($op, &$params) {
+  switch ($op) {
+    case 'add':
+      $node = $params['node'];
+
+      if (variable_get('og_automenu_enable_' . $node->type, 0)) {
+        if (count($node->og_groups) > 0) {
+          $group_nid = reset($node->og_groups);
+          $result = db_query("SELECT mlid, menu_name FROM {menu_links} WHERE link_path = '%s'", "node/$group_nid");
+          $group_menu = db_fetch_object($result);
+        }
+        if ($group_menu) {
+          if (($node->menu['link_title'] == '' || $node->menu['delete']) && $node->status == 1) {
+
+            $new_menu = array(
+                'success' => TRUE,
+                'menu_name' => $group_menu->menu_name,
+                'link_path' => 'node/' . $node->nid,
+                'link_title' => $node->title,
+                'plid' => $group_menu->mlid,
+                'hidden' => variable_get('og_automenu_hide_' . $node->type, 0),
+                //'customized' => true, // ?
+            );
+
+            if ($existing_item = db_fetch_array(db_query("SELECT mlid FROM {menu_links} WHERE link_path = '%s' AND plid = %d", 'node/' . $node->nid, $new_menu['plid']))) {
+              $new_menu['mlid'] = $existing_item['mlid'];
+            }
+
+            return $new_menu;
+          }
+        }
+      }
+      break;
+    case 'configure':
+      $form = $params['form'];
+      $form_id = $params['form_id'];
+      $form_state = $params['form_state'];
+
+      if ($form_id == 'node_type_form' && isset($form['identity']['type'])) {
+        // Get a list of enabled languages.
+        if (og_is_group_post_type($form['#node_type']->type)) {
+          $form['og']['og_automenu_enable'] = array(
+              '#type' => 'checkbox',
+              '#title' => t('Automatically add this content type post under parent group menu entry'),
+              '#default_value' => variable_get('og_automenu_enable_' . $form['#node_type']->type, 0),
+              '#description' => t('Add this content type menu items as children of group menu item this node will be posted to'),
+          );
+          $form['og']['og_automenu_hide'] = array(
+              '#type' => 'checkbox',
+              '#title' => t('Hide group post automenu entry'),
+              '#default_value' => variable_get('og_automenu_hide_' . $form['#node_type']->type, 0),
+              '#description' => t('Set all auto generated menu items of this content type to hidden'),
+          );
+        }
+      }
+      return $form;
+      
+      break;
+  }
+}

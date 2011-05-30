@@ -1,10 +1,9 @@
 <?php
-// $Id: poll-bar.tpl.php,v 1.3 2008/10/13 12:31:42 dries Exp $
+// $Id: poll-bar.tpl.php,v 1.2 2007/08/07 08:39:35 goba Exp $
 
 /**
- * @file
- * Default theme implementation to display the bar for a single choice in a
- * poll.
+ * @file poll-bar.tpl.php
+ * Display the bar for a single choice in a poll
  *
  * Variables available:
  * - $title: The title of the poll.

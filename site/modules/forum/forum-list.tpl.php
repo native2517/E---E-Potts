@@ -1,8 +1,8 @@
 <?php
-// $Id: forum-list.tpl.php,v 1.5 2008/10/13 12:31:42 dries Exp $
+// $Id: forum-list.tpl.php,v 1.4 2007/08/30 18:58:12 goba Exp $
 
 /**
- * @file
+ * @file forum-list.tpl.php
  * Default theme implementation to display a list of forums and containers.
  *
  * Available variables:

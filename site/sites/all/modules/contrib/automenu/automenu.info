@@ -1,0 +1,13 @@
+; $Id$
+name = AutoMenu
+description = "Provides API functionality to create menu items"
+dependencies[] = menu
+core = 6.x
+
+
+; Information added by drupal.org packaging script on 2011-04-23
+version = "6.x-2.0"
+core = "6.x"
+project = "automenu"
+datestamp = "1303554414"
+

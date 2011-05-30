@@ -1,8 +1,8 @@
 <?php
-// $Id: user-profile-item.tpl.php,v 1.3 2008/10/13 12:31:43 dries Exp $
+// $Id: user-profile-item.tpl.php,v 1.2 2007/08/07 08:39:36 goba Exp $
 
 /**
- * @file
+ * @file user-profile-item.tpl.php
  * Default theme implementation to present profile items (values from user
  * account profile fields or modules).
  *

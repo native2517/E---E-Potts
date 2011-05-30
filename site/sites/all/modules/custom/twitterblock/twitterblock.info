@@ -1,0 +1,6 @@
+; $Id$
+name = Twitter Block
+version = 1.0
+description = "Creates a block that shows your most recent tweets."
+core = 6.x
+PHP = 4.3

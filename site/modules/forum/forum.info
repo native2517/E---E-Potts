@@ -1,17 +1,14 @@
-; $Id: forum.info,v 1.15 2010/12/20 19:59:42 webchick Exp $
+; $Id: forum.info,v 1.6 2007/06/08 05:50:54 dries Exp $
 name = Forum
-description = Provides discussion forums.
+description = Enables threaded discussions about general topics.
 dependencies[] = taxonomy
 dependencies[] = comment
-package = Core
+package = Core - optional
 version = VERSION
-core = 7.x
-files[] = forum.test
-configure = admin/structure/forum
-stylesheets[all][] = forum.css
+core = 6.x
 
-; Information added by drupal.org packaging script on 2011-01-05
-version = "7.0"
+; Information added by drupal.org packaging script on 2010-12-15
+version = "6.20"
 project = "drupal"
-datestamp = "1294208756"
+datestamp = "1292447788"
 

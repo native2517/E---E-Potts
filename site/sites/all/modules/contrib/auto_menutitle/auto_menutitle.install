@@ -1,0 +1,79 @@
+<?php
+// $Id: auto_menutitle.install,v 1.6 2011/02/13 06:34:49 alexkb Exp $
+
+/**
+ * @file
+ * auto_menutitle alters the menu_links table for storing menu settings. It also stores a number 
+ * of variables in the variable table too. This file handles the install/uninstall of this data, cleanly.
+ */
+
+
+/**
+ * Implementation of hook_install();
+ */
+function auto_menutitle_install() {
+  auto_menutitle_update_1000();
+}
+
+
+/**
+ * SQL Updates to node table for menu states
+ */
+function auto_menutitle_update_1000() {
+  $ret = array();
+  
+  db_add_field($ret, 'menu_links', 'automenu_state', array('description' => 'Toggle for saved auto menu titles.', 'type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0));
+ 
+  /* Upon first installing (or updating to 1000) the module, we check to see what menu links have the same text as there respective node, and set the auto menu title state flag.
+     Note: do we need to do something differently here for node versions?
+  */ 
+  $result = db_query("SELECT * FROM {node} node LEFT JOIN {menu_links} menu_links ON node.title = menu_links.link_title WHERE link_path = concat(\"node/\", node.nid)");
+
+  while ($row = db_fetch_array($result)) {
+    $ret[] = update_sql("UPDATE {menu_links} SET automenu_state = '1' WHERE mlid = " . $row['mlid']);
+  }
+  
+  return $ret;
+}
+
+/**
+ * Copy the old setting for 'collapsible', so we can support the new option for enabling, but not checking on
+ */
+function auto_menutitle_update_1001() {
+  $ret = array();
+  $t = get_t();
+  
+  foreach (node_get_types('names') as $type => $type_name) {
+    $setting = variable_get('amt_'. $type, 0);
+    if ($setting == 2) { // 2 was the value of AUTO_MENUTITLE_ENABLED_COLLAPSE in v1.21/1.22
+      variable_set('amt_collapsed_' . $type, TRUE);
+      variable_set('amt_' . $type, 1); // Would have been on by default.
+      $ret['amt_' . $type] = array(
+        'title' => $t('Auto menutitle'),
+        'value' => $t('Auto menutitle (' . $story . ')'),
+        'description' => $t('Adjusted default menutitle setting for ' . $type . ', as these have changed. No data lost.'),
+        'severity' => REQUIREMENT_OK,
+      );
+    }
+  }
+
+  return $ret;
+}
+
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function auto_menutitle_uninstall() {
+  $ret = array();
+  
+  foreach (node_get_types('names') as $type => $type_name) {
+    variable_del('amt_'. $type);
+    variable_del('amt_collapsed_'. $type);
+  }
+  
+  db_drop_field($ret, 'menu_links', 'automenu_state');
+  
+  return $ret;
+}
+

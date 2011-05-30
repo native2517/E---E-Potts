@@ -1,13 +1,12 @@
-; $Id: dblog.info,v 1.8 2010/12/20 19:59:41 webchick Exp $
+; $Id: dblog.info,v 1.2 2007/06/08 05:50:54 dries Exp $
 name = Database logging
 description = Logs and records system events to the database.
-package = Core
+package = Core - optional
 version = VERSION
-core = 7.x
-files[] = dblog.test
+core = 6.x
 
-; Information added by drupal.org packaging script on 2011-01-05
-version = "7.0"
+; Information added by drupal.org packaging script on 2010-12-15
+version = "6.20"
 project = "drupal"
-datestamp = "1294208756"
+datestamp = "1292447788"
 

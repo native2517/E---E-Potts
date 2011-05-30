@@ -1,0 +1,13 @@
+; $Id$
+name = AutoMenu Taxonomy
+description = "Automatically set parent menu item for nodes and taxonomy terms based on taxonomy settings"
+dependencies[] = automenu
+dependencies[] = taxonomy
+dependencies[] = i18nmenu
+core = 6.x
+; Information added by drupal.org packaging script on 2011-04-23
+version = "6.x-2.0"
+core = "6.x"
+project = "automenu"
+datestamp = "1303554414"
+

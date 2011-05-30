@@ -1,0 +1,138 @@
+<?php
+// $Id: auto_menutitle.module,v 1.8 2011/02/13 06:34:49 alexkb Exp $
+
+/**
+ * @file
+ * Allows the menu title field to be automatically populated with the contents written into the node Title field
+ */
+
+define('AUTO_MENUTITLE_DISABLED', 0);
+define('AUTO_MENUTITLE_ENABLED_ON', 1);
+define('AUTO_MENUTITLE_ENABLED_OFF', 2);
+
+
+/**
+ * Implementation of hook_perm()
+ */
+function auto_menutitle_perm() {
+  return array();
+}
+
+
+/**
+ * Implementation of hook_form_alter().
+ */
+function auto_menutitle_form_alter(&$form, $form_state, $form_id) {
+  
+  if (isset($form['#node_type']) && 'node_type_form' == $form_id) {
+    auto_menutitle_node_settings_form($form);
+  }
+  elseif (isset($form['#node']) && isset($form['#method']) && $form['#node']->type .'_node_form' == $form_id) {
+    
+    $default_option = auto_menutitle_get_default_setting($form['#node']->type);
+    $option = auto_menutitle_get_setting($form['#node']);
+    
+    if ($default_option == AUTO_MENUTITLE_ENABLED_ON || $default_option == AUTO_MENUTITLE_ENABLED_OFF) {
+      $form['menu']['#collapsed'] = variable_get('amt_collapsed_' . $form['#node']->type, FALSE);     
+      
+      $form['menu']['fixtitle'] = array(
+        '#type' => 'checkbox',
+        '#default_value' => ($default_option == AUTO_MENUTITLE_ENABLED_ON || $option),
+        '#weight' => -1,
+        '#title' => t('Automatically update Menu Title'),
+        '#description' => t('To allow editing of the Menu title, simply un-check this option.'),
+      );
+
+      if ($default_option == AUTO_MENUTITLE_ENABLED_ON || $default_option == AUTO_MENUTITLE_ENABLED_OFF) {
+        $form['menu']['link_title']['#weight'] = -2;
+        
+        if ($option) {
+          $form['menu']['link_title']['#attributes'] = array('readonly' => 'readonly');
+        }
+      }
+
+      // if we're on a node edit form and the automenu state is off or the setting has been set off for this menu item, then lets disable everything
+      if (!empty($form['nid']['#value']) && !$form['#node']->menu['automenu_state'] && !$option) { 
+        $form['menu']['fixtitle']['#default_value'] = FALSE;
+        $form['menu']['link_title']['#attributes'] = array();
+      }
+      
+      $form['#after_build'][] = 'auto_menutitle_after_build';      
+    }
+  }
+}
+
+
+/**
+ * hook nodeapi function to store/retrieve/set auto_menutitle states
+ */
+function auto_menutitle_nodeapi(&$node, $op, $teaser) {
+  
+  switch ($op) {
+    case 'insert':
+    case 'update': 
+      if (isset($node->menu['mlid'])) {
+        $res =  db_query('UPDATE {menu_links} SET automenu_state = %d WHERE mlid = %d', $node->menu['fixtitle'], $node->menu['mlid']);
+      }
+      break;
+    case 'delete':
+
+  }
+  
+  return;
+}
+
+
+/**
+ * Implementation of node_settings_form().
+ */
+function auto_menutitle_node_settings_form(&$form) {
+  
+  $form['auto_menutitle'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Automatic Menu title generation'),
+    '#weight' => 2,
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+  );
+  
+  $form['auto_menutitle']['amt'] = array(
+    '#type' => 'radios',
+    '#default_value' => auto_menutitle_get_default_setting($form['#node_type']->type),
+    '#options' => array(
+      t('Disabled'),
+      t('Copy the node title into the menu title field'),
+      t('Copy the node title into the menu title field, but only after manually checking on'),
+    )
+  );
+
+  $form['auto_menutitle']['amt_collapsed'] = array(
+    '#type' => 'checkbox',
+    '#title' => 'Collapse the menu fieldset',
+    '#default_value' => variable_get("amt_collapsed_" . $form['#node_type']->type, FALSE),
+    '#description' => t('When checked, the fielset will be collapsed. Note: if using the verticaltabs module, this setting will have no impact.')
+  );
+}
+
+
+/**
+ * Returns the auto_menutitle setting depending on the content type paramatar.
+ */
+function auto_menutitle_get_default_setting($type) {
+  return variable_get('amt_'. $type, AUTO_MENUTITLE_DISABLED);
+}
+
+/**
+ * Returns the auto_menutitle setting for the node, if its been custom set for this particular node.
+ */
+function auto_menutitle_get_setting($node) {
+  if (isset($node->menu['automenu_state'])) {
+    return $node->menu['automenu_state'];
+  }
+}
+
+function auto_menutitle_after_build($form, $form_state) {
+  drupal_add_js(drupal_get_path('module', 'auto_menutitle') . '/auto_menutitle.js');
+  return $form;
+}
+

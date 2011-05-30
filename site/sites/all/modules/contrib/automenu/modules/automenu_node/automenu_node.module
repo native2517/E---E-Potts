@@ -1,0 +1,84 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_automenuapi().
+ */
+function automenu_node_automenuapi($op, &$params) {
+  switch ($op) {
+    case 'add':
+      $node = $params['node'];
+      $parent_menu = explode(":", variable_get('parentmenu' . $node->language . '_' . $node->type, '0'));
+      if ($parent_menu[0] != '0') {
+        if ($node->status == 1) {
+          if ($node->language) {
+            $new_menu['options'] = array('langcode' => $node->language);
+          }
+          
+          $new_menu = array(
+              'success' => TRUE,
+              'menu_name' => $parent_menu[0],
+              'link_path' => 'node/' . $node->nid,
+              'link_title' => $node->title,
+              'plid' => $parent_menu[1],
+              'hidden' => variable_get('automenu_hide_' . $node->type, 0),
+              'options' => $new_menu['options'],
+          );
+
+          if ($existing_item = db_fetch_array(db_query("SELECT mlid FROM {menu_links} WHERE link_path = '%s' AND plid = %d", 'node/' . $node->nid, $new_menu['plid']))) {
+            $new_menu['mlid'] = $existing_item['mlid'];
+          }
+
+          return $new_menu;
+        }
+      }
+      break;
+    case 'configure':
+      $form = $params['form'];
+      $form_id = $params['form_id'];
+      $form_state = $params['form_state'];
+      if ($form_id == 'node_type_form' && isset($form['identity']['type'])) {
+        // Get a list of enabled languages.
+        $languages = language_list('enabled');
+        $languages = $languages[1];
+
+        // Shouldn't this be language specific?!
+        $options = array_merge(array("0" => "None"), menu_parent_options(menu_get_menus(), 0));
+
+        // add a selection for "no language" selection... maybe we can find a
+        // better way (I think this is what happens in language neutral situations?)
+
+        $form['workflow']['parentmenu'] = array(
+            '#type' => 'select',
+            '#title' => t('Default parent menu'),
+            '#default_value' => variable_get('parentmenu_' . $form['#node_type']->type, 0),
+            '#options' => $options, // TODO filter on menu items that are language neutral?
+            '#description' => t('Select the default menu for nodes without a language (i.e. language neutral.)'),
+        );
+
+        foreach ($languages as $language) {
+          $form['workflow']['parentmenu' . $language->language] = array(
+              '#type' => 'select',
+              '#title' => t('Parent menu for !lang nodes', array('!lang' => $language->name)),
+              '#default_value' => variable_get('parentmenu' . $language->language . '_' . $form['#node_type']->type, 0),
+              '#options' => $options, // TODO filter on menu items of current language.
+              '#description' => t('Select the default menu for nodes written in !lang.', array('!lang' => $language->name)),
+          );
+        }
+
+        $form['workflow']['automenu_hide'] = array(
+            '#type' => 'checkbox',
+            '#title' => t('Hide automenu entry'),
+            '#default_value' => variable_get('automenu_hide_' . $form['#node_type']->type, 0),
+            '#description' => t('Set all auto generated menu items of this content type to hidden'),
+        );
+      }
+      elseif (strpos($form_id, 'node_form') !== FALSE) {
+        $form['menu']['#collapsed'] = TRUE;
+      }
+      return $form;
+
+      break;
+  }
+}
+

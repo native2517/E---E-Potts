@@ -1,8 +1,8 @@
 <?php
-// $Id: profile-wrapper.tpl.php,v 1.3 2008/10/13 12:31:42 dries Exp $
+// $Id: profile-wrapper.tpl.php,v 1.2 2007/08/07 08:39:35 goba Exp $
 
 /**
- * @file
+ * @file profile-wrapper.tpl.php
  * Default theme implementation for wrapping member listings and their
  * profiles.
  *

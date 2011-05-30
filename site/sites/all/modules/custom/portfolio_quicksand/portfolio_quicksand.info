@@ -1,0 +1,10 @@
+; $Id$
+name = Quicksand Block
+version = 1.0
+description = "Module produces a quicksand filter block of all portfolio content marked as 'promoted to the front'."
+core = 6.x
+package = "Greensky Architecture"
+
+dependencies[] = jquery_ui
+dependencies[] = jquery_plugin
+PHP = 4.3

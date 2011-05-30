@@ -1,0 +1,12 @@
+; $Id: auto_menutitle.info,v 1.2 2010/02/13 06:23:04 alexkb Exp $
+name = Automatic Menutitles
+description = Saves you time by coping your node title into the menutitle field, if its enabled.
+core = 6.x
+
+
+; Information added by drupal.org packaging script on January 1, 1970 - 00:00
+version = "6.x-1.23"
+core = "6.x"
+project = "auto_menutitle"
+datestamp = "1297589562"
+

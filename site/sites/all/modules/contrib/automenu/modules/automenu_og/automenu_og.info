@@ -1,0 +1,12 @@
+; $Id
+name = Organic groups automenu
+description = Automatically set parent menu item for organic group posted nodes
+dependencies[] = og
+dependencies[] = automenu
+core = 6.x
+; Information added by drupal.org packaging script on 2011-04-23
+version = "6.x-2.0"
+core = "6.x"
+project = "automenu"
+datestamp = "1303554414"
+

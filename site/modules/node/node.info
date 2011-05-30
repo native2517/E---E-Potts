@@ -1,17 +1,12 @@
-; $Id: node.info,v 1.15 2010/12/20 19:59:42 webchick Exp $
+; $Id: node.info,v 1.4 2007/06/08 05:50:55 dries Exp $
 name = Node
 description = Allows content to be submitted to the site and displayed on pages.
-package = Core
+package = Core - required
 version = VERSION
-core = 7.x
-files[] = node.module
-files[] = node.test
-required = TRUE
-configure = admin/structure/types
-stylesheets[all][] = node.css
+core = 6.x
 
-; Information added by drupal.org packaging script on 2011-01-05
-version = "7.0"
+; Information added by drupal.org packaging script on 2010-12-15
+version = "6.20"
 project = "drupal"
-datestamp = "1294208756"
+datestamp = "1292447788"
 

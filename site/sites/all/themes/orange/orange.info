@@ -1,0 +1,190 @@
+;$Id: orange.info,v 1.4 2010/09/16 15:14:21 nomonstersinme Exp $
+
+; Descriptive information
+name = Orange
+description = Orange description
+core = 6.x
+engine = phptemplate
+
+; Regions
+regions[content_top] = Content top
+regions[nav] = Navigation
+regions[sidebar] = Sidebar
+regions[content_inner] = Content inner
+regions[node_inner] = Region within node content
+regions[content_bottom] = Content bottom
+regions[footer_content] = Footer content
+
+; Stylesheets
+stylesheets[all][] = system-menus.css 
+stylesheets[all][] = css/style.css
+
+; Scripts
+scripts[] = js/orange.js
+
+; Skinr
+skinr[options][groups][layout][title] = Layout
+skinr[options][groups][layout][collapsed] = 1
+skinr[options][groups][content][title] = Content
+skinr[options][groups][content][collapsed] = 1
+skinr[options][groups][links][title] = Links
+skinr[options][groups][links][collapsed] = 1
+
+skinr[hide_title][group] = content
+skinr[hide_title][options][1][label] = Hide title
+skinr[hide_title][options][1][class] = hide-title
+
+skinr[clear_fix][group] = content
+skinr[clear_fix][options][1][label] = Add a clear-fix class
+skinr[clear_fix][options][1][class] = clearfix
+
+; Sidebars
+skinr[orange_sidebars][title] = Sidebar layout
+skinr[orange_sidebars][description] = Sidebar defaults to the left if you want it on the right check above.
+skinr[orange_sidebars][group] = layout
+skinr[orange_sidebars][features][] = page
+skinr[orange_sidebars][options][1][label] = Right
+skinr[orange_sidebars][options][1][class] = right
+
+; Content alignment
+skinr[orange_align][title] = Alignment
+skinr[orange_align][type] = select
+skinr[orange_align][description] = Align the content within to the left, center or right
+skinr[orange_align][group] = layout
+skinr[orange_align][options][1][label] = Left
+skinr[orange_align][options][1][class] = align-left
+skinr[orange_align][options][2][label] = Center
+skinr[orange_align][options][2][class] = align-center
+skinr[orange_align][options][3][label] = Right
+skinr[orange_align][options][3][class] = align-right
+
+; Fonts
+skinr[orange_fonts][title] = Fonts
+skinr[orange_fonts][type] = select
+skinr[orange_fonts][description] = Select different fonts for headings/content.
+skinr[orange_fonts][group] = content
+skinr[orange_fonts][options][1][label] = Serif headings/sans-serif content
+skinr[orange_fonts][options][1][class] = serif-heading
+skinr[orange_fonts][options][2][label] = Serif headings/serif content
+skinr[orange_fonts][options][2][class] = serif-heading serif-cont
+skinr[orange_fonts][options][3][label] = Monospace headings/sans-serif content
+skinr[orange_fonts][options][3][class] = mono-heading
+skinr[orange_fonts][options][4][label] = Monospace headings/mono content
+skinr[orange_fonts][options][4][class] = mono-heading mono-cont
+
+; Text size
+skinr[orange_fontsize][title] = Page font size
+skinr[orange_fontsize][type] = select
+skinr[orange_fontsize][description] = choose a font size for the entire site or just one part.
+skinr[orange_fontsize][group] = content
+skinr[orange_fontsize][options][1][label] = Small
+skinr[orange_fontsize][options][1][class] = sm_font
+skinr[orange_fontsize][options][2][label] = Medium
+skinr[orange_fontsize][options][2][class] = md_font
+skinr[orange_fontsize][options][3][label] = Large
+skinr[orange_fontsize][options][3][class] = lg_font
+skinr[orange_fontsize][options][4][label] = Extra Large
+skinr[orange_fontsize][options][4][class] = ex_font
+skinr[orange_fontsize][options][5][label] = Giant (use with caution)
+skinr[orange_fontsize][options][5][class] = giant
+
+; Text case
+skinr[orange_fontcase][title] = Alter text case
+skinr[orange_fontcase][type] = select
+skinr[orange_fontcase][description] = Will make all letters uppercase or lowercase within div.
+skinr[orange_fontcase][group] = content
+skinr[orange_fontcase][options][1][label] = Uppercase
+skinr[orange_fontcase][options][1][class] = uppercase
+skinr[orange_fontcase][options][2][label] = Lowercase
+skinr[orange_fontcase][options][2][class] = lowercase
+skinr[orange_fontcase][options][3][label] = Capitalize
+skinr[orange_fontcase][options][3][class] = capitalize
+
+; Sizes
+skinr[orange_layout][title] = Widths
+skinr[orange_layout][type] = select
+skinr[orange_layout][description] = This option allows you to select a width percentage for blocks, views, panels and nodes.  NOTE that it also floats the content left.
+skinr[orange_layout][features][] = block
+skinr[orange_layout][features][] = panels_pane
+skinr[orange_layout][features][] = views_view
+skinr[orange_layout][features][] = node
+skinr[orange_layout][group] = layout
+skinr[orange_layout][options][1][label] = 100%
+skinr[orange_layout][options][1][class] = width-100
+skinr[orange_layout][options][2][label] = 75%
+skinr[orange_layout][options][2][class] = width-75
+skinr[orange_layout][options][3][label] = 50%
+skinr[orange_layout][options][3][class] = width-50
+skinr[orange_layout][options][4][label] = 33%
+skinr[orange_layout][options][4][class] = width-33
+skinr[orange_layout][options][5][label] = 25%
+skinr[orange_layout][options][5][class] = width-25
+
+; Margins
+skinr[orange_margin][title] = Margins
+skinr[orange_margin][description] = Adds margins to the div
+skinr[orange_margin][features][] = block
+skinr[orange_margin][features][] = panels_pane
+skinr[orange_margin][features][] = views_view
+skinr[orange_margin][features][] = node
+skinr[orange_margin][group] = layout
+skinr[orange_margin][options][1][label] = Top - 10px
+skinr[orange_margin][options][1][class] = top-10
+skinr[orange_margin][options][2][label] = Right - 10px
+skinr[orange_margin][options][2][class] = right-10
+skinr[orange_margin][options][3][label] = Bottom - 10px
+skinr[orange_margin][options][3][class] = bottom-10
+skinr[orange_margin][options][4][label] = Left - 10px
+skinr[orange_margin][options][4][class] = left-10
+
+; List styles
+skinr[orange_lists][title] = List Styles
+skinr[orange_lists][type] = select
+skinr[orange_lists][description] = Select from different list styles
+skinr[orange_lists][features][] = block
+skinr[orange_lists][features][] = panels_pane
+skinr[orange_lists][features][] = views_view
+skinr[orange_lists][group] = links
+skinr[orange_lists][options][1][label] = List style with image
+skinr[orange_lists][options][1][class] = img
+skinr[orange_lists][options][2][label] = Blocky list with orange hover
+skinr[orange_lists][options][2][class] = blist
+skinr[orange_lists][options][3][label] = Blocky list with grey hover
+skinr[orange_lists][options][3][class] = blist grey
+
+; Menu styles
+skinr[orange_menus][title] = Menu styles
+skinr[orange_menus][type] = select
+skinr[orange_menus][group] = links
+skinr[orange_menus][features][] = block
+skinr[orange_menus][features][] = panels_pane
+skinr[orange_menus][features][] = views_view
+skinr[orange_menus][description] = select from available menu styles
+skinr[orange_menus][options][1][label] = Drop downs
+skinr[orange_menus][options][1][class] = dd
+skinr[orange_menus][options][2][label] = One level links with separators
+skinr[orange_menus][options][2][class] = inline-links
+skinr[orange_menus][options][3][label] = Links as columns with sub-options below
+skinr[orange_menus][options][3][class] = column-links clearfix
+
+; Imagefields
+skinr[orange_image][title] = Float imagefield
+skinr[orange_image][type] = select
+skinr[orange_image][group] = content
+skinr[orange_image][features][] = block
+skinr[orange_image][features][] = panels_pane
+skinr[orange_image][features][] = views_view
+skinr[orange_image][features][] = node
+skinr[orange_image][description] = Position the imagefield to the left or right
+skinr[orange_image][options][1][label] = Float Right
+skinr[orange_image][options][1][class] = img-right
+skinr[orange_image][options][2][label] = Float Left
+skinr[orange_image][options][2][class] = img-left
+
+
+; Information added by drupal.org packaging script on 2010-09-16
+version = "6.x-2.1"
+core = "6.x"
+project = "orange"
+datestamp = "1284650461"
+

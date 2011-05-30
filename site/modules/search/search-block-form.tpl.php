@@ -1,38 +1,37 @@
 <?php
-// $Id: search-block-form.tpl.php,v 1.6 2011/01/03 00:17:55 webchick Exp $
+// $Id: search-block-form.tpl.php,v 1.1 2007/10/31 18:06:38 dries Exp $
 
 /**
- * @file
- * Displays the search form block.
+ * @file search-block-form.tpl.php
+ * Default theme implementation for displaying a search form within a block region.
  *
  * Available variables:
  * - $search_form: The complete search form ready for print.
- * - $search: Associative array of search elements. Can be used to print each
- *   form element separately.
+ * - $search: Array of keyed search elements. Can be used to print each form
+ *   element separately.
  *
- * Default elements within $search:
+ * Default keys within $search:
  * - $search['search_block_form']: Text input area wrapped in a div.
- * - $search['actions']: Rendered form buttons.
- * - $search['hidden']: Hidden form elements. Used to validate forms when
- *   submitted.
+ * - $search['submit']: Form submit button.
+ * - $search['hidden']: Hidden form elements. Used to validate forms when submitted.
  *
- * Modules can add to the search form, so it is recommended to check for their
- * existence before printing. The default keys will always exist. To check for
- * a module-provided field, use code like this:
- * @code
+ * Since $search is keyed, a direct print of the form element is possible.
+ * Modules can add to the search form so it is recommended to check for their
+ * existance before printing. The default keys will always exist.
+ *
  *   <?php if (isset($search['extra_field'])): ?>
  *     <div class="extra-field">
  *       <?php print $search['extra_field']; ?>
  *     </div>
  *   <?php endif; ?>
- * @endcode
+ *
+ * To check for all available data within $search, use the code below.
+ *
+ *   <?php print '<pre>'. check_plain(print_r($search, 1)) .'</pre>'; ?>
  *
  * @see template_preprocess_search_block_form()
  */
 ?>
 <div class="container-inline">
-  <?php if (empty($variables['form']['#block']->subject)) : ?>
-    <h2 class="element-invisible"><?php print t('Search form'); ?></h2>
-  <?php endif; ?>
   <?php print $search_form; ?>
 </div>
