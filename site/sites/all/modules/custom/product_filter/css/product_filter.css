@@ -1,4 +1,26 @@
-#portfolio_quicksand_filters li,
-#portfolio_quicksand_projects li {
-				display: inline;
+#block-product-block {
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+#block-product-block .form-item {
+    float: left;
+    margin-right: 15px;
+}
+
+#block-product-block .form-item label {
+    float: left;
+    font-size: 15px;
+    margin-top: 7px;
+    margin-right: 5px;
+}
+
+#block-product-block .form-item .form-select {
+    margin: 4px 0;
+    padding: 4px;
+}
+
+
+#block-product-block .form-submit {
+    margin: 9px 0px;
 }
