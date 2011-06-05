@@ -120,11 +120,7 @@
              </a>
            </h1>
          <?php endif; ?>
-         <?php if (!empty($site_slogan)): ?>
-           <p id="site-slogan">
-             <?php print $site_slogan; ?>
-           </p>
-         <?php endif; ?>
+									<?php print $header; ?>
         </div>
         <div id="nav">
          <?php if ($nav): ?>
