@@ -20,6 +20,58 @@ function product_filter_block($op = 'list', $delta = 0, $edit = array()) {
 
             break;
 
+        case 'configure' :
+
+            switch ($delta) {
+
+                case 'product_block_featured':
+
+                    $form['product_block_featured_1'] = array(
+                        '#type' => 'select',
+                        '#title' => t('Featured Product 1'),
+                        '#default_value' => variable_get('product_block_featured_1', 0),
+                        '#description' => "Select which <em>product</em> will feature as item 1.",
+                        '#options' => _product_filter_opts(),
+                    );
+
+                    $form['product_block_featured_2'] = array(
+                        '#type' => 'select',
+                        '#title' => t('Featured Product 2'),
+                        '#default_value' => variable_get('product_block_featured_2', 0),
+                        '#description' => "Select which <em>product</em> will feature as item 2.",
+                        '#options' => _product_filter_opts(),
+                    );
+
+                    $form['product_block_featured_3'] = array(
+                        '#type' => 'select',
+                        '#title' => t('Featured Product 3'),
+                        '#default_value' => variable_get('product_block_featured_3', 0),
+                        '#description' => "Select which <em>product</em> will feature as item 3.",
+                        '#options' => _product_filter_opts(),
+                    );
+
+                    return $form;
+
+                    break;
+            }
+
+            break;
+
+        case 'save';
+
+            switch ($delta) {
+
+                case 'product_block_featured':
+
+                    variable_set('product_block_featured_1', $edit['product_block_featured_1']);
+                    variable_set('product_block_featured_2', $edit['product_block_featured_2']);
+                    variable_set('product_block_featured_3', $edit['product_block_featured_3']);
+
+                    break;
+            }
+            break;
+
+
         case 'view':
 
             switch ($delta) {
@@ -34,9 +86,15 @@ function product_filter_block($op = 'list', $delta = 0, $edit = array()) {
 
                 case 'product_block_featured':
 
+                    $fetured = array(
+                        variable_get('product_block_featured_1', 0),
+                        variable_get('product_block_featured_2', 0),
+                        variable_get('product_block_featured_3', 0),
+                    );
+
                     $block = array(
                         'subject' => t('Featured Products'),
-                        'content' => product_filter_block_2(),
+                        'content' => product_filter_block_2($featured),
                     );
 
                     break;
@@ -46,6 +104,21 @@ function product_filter_block($op = 'list', $delta = 0, $edit = array()) {
 
             break;
     }
+}
+
+function _product_filter_opts(){
+
+    $products = array();
+
+    $result = db_query("SELECT nid FROM {node} WHERE type = '%s'", "product");
+
+    while ($data = db_fetch_object($result)) {
+        $node = node_load($data->nid);
+
+        $products[$node->nid] = $node->title;
+    }
+
+    return $products;
 }
 
 function product_filter_block_1($form) {
@@ -73,26 +146,8 @@ function product_filter_block_1($form) {
     return $form;
 }
 
-function product_filter_block_2() {
-    $projects = array();
-    $filters = array();
+function product_filter_block_2($featured = array()) {
 
-    $result = db_query("SELECT nid FROM {node} WHERE type = '%s'", "portfolio");
-
-    while ($data = db_fetch_object($result)) {
-        $node = node_load($data->nid);
-
-        foreach ($node->field_services as $service) {
-            $filters["filter_" . $service["nid"]] = db_fetch_object(db_query("SELECT title FROM {node} WHERE nid = %d", $service["nid"]))->title;
-        }
-
-        $projects[] = array(
-            'image' => theme('imagecache', 'portfolio-quicksand', $node->field_image[0]['filepath']),
-            'title' => $node->title,
-            'path' => "node/{$node->nid}",
-            'id' => "filter_" . $node->field_services[0]["nid"],
-        );
-    }
-
-    return theme("quicksand_block", $projects, $filters);
+    
+    return '';
 }
