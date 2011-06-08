@@ -152,12 +152,12 @@ switch (arg(0)) {
 if (!$vars['sidebar_right'] && !$vars['sidebar_left']) {
     // Both regions are empty
     $vars['body_attributes']['class'][] = 'no-sidebar';
+} else if ($vars['sidebar_right'] && $vars['sidebar_left']) {
+    $vars['body_attributes']['class'][] = 'has-sidebar-both';
 } else if ($vars['sidebar_left']) {
     $vars['body_attributes']['class'][] = 'has-sidebar-left';
 } else if ($vars['sidebar_right']) {
     $vars['body_attributes']['class'][] = 'has-sidebar-right';
-} else if ($vars['sidebar_right'] && $vars['sidebar_left']) {
-    $vars['body_attributes']['class'][] = 'has-sidebar-both';
 }
 
 //logout text

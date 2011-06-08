@@ -1,5 +1,22 @@
 <?php
 
+define("TYPE_VID", 3);
+define("BRAND_VID", 2);
+
+function product_filter_theme($existing, $type, $theme, $path) {
+    $path = drupal_get_path('module', 'product_filter') . '/theme';
+
+    return array(
+        'featured_products' => array(
+            'arguments' => array(
+                'products' => array(),
+            ),
+            'template' => 'featured_products',
+            'path' => $path,
+        ),
+    );
+}
+
 function product_filter_block($op = 'list', $delta = 0, $edit = array()) {
     drupal_add_css(drupal_get_path('module', 'product_filter') . "/css/product_filter.css");
 
@@ -8,6 +25,11 @@ function product_filter_block($op = 'list', $delta = 0, $edit = array()) {
 
             $blocks['product_block'] = array(
                 'info' => t('Product filter block'),
+                'weight' => 0,
+            );
+
+            $blocks['product_block_2'] = array(
+                'info' => t('Product filter block 2'),
                 'weight' => 0,
             );
 
@@ -83,10 +105,19 @@ function product_filter_block($op = 'list', $delta = 0, $edit = array()) {
                     );
 
                     break;
+                
+                case 'product_block_2':
+
+                    $block = array(
+                        'subject' => t('Product filter block 2'),
+                        'content' => drupal_get_form("product_filter_block_3"),
+                    );
+
+                    break;
 
                 case 'product_block_featured':
 
-                    $fetured = array(
+                    $featured = array(
                         variable_get('product_block_featured_1', 0),
                         variable_get('product_block_featured_2', 0),
                         variable_get('product_block_featured_3', 0),
@@ -121,6 +152,32 @@ function _product_filter_opts(){
     return $products;
 }
 
+function _product_filter_brand_opts() {
+
+    $options = array();
+
+    $vocab = taxonomy_get_tree(BRAND_VID);
+
+    foreach($vocab as $term){
+        $options[$term->tid] = $term->name;
+    }
+
+    return $options;
+}
+
+function _product_filter_type_opts() {
+
+    $options = array();
+
+    $vocab = taxonomy_get_tree(TYPE_VID);
+
+    foreach($vocab as $term){
+        $options[$term->tid] = $term->name;
+    }
+
+    return $options;
+}
+
 function product_filter_block_1($form) {
 
     $form['title'] = array(
@@ -131,23 +188,42 @@ function product_filter_block_1($form) {
         '#required' => TRUE,
     );
 
-    $form['brand'] = array(
-        '#type' => 'select',
-        '#title' => t('Brand'),
-        '#options' => array(
-            'title' => t('Titles only'),
-            'teaser' => t('Titles plus teaser'),
-            'fulltext' => t('Full text'),
-        ),
-    );
-
     $form['submit'] = array('#type' => 'submit', '#value' => t('Search'));
 
     return $form;
 }
 
 function product_filter_block_2($featured = array()) {
+    $products = array();
 
+    foreach($featured as $nid){
+        $node = node_load($nid);
+        $products[] = array(
+            'image' => theme('imagecache', 'product-thumbnail', $node->field_image[0]['filepath']),
+            'title' => $node->title,
+            'price' => "&pound" . number_format($node->field_price[0]['value'],2),
+            'path' => "node/{$node->nid}",
+        );
+    }
     
-    return '';
+    return theme("featured_products", $products);
+}
+
+function product_filter_block_3($form) {
+
+    $form['brand'] = array(
+        '#type' => 'select',
+        '#title' => t('Brand'),
+        '#options' => _product_filter_brand_opts(),
+    );
+
+    $form['type'] = array(
+        '#type' => 'select',
+        '#title' => t('Type'),
+        '#options' => _product_filter_type_opts(),
+    );
+
+    $form['submit'] = array('#type' => 'submit', '#value' => t('Search'));
+
+    return $form;
 }

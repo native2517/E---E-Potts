@@ -134,6 +134,11 @@
           <?php print $content_top; ?>
         </div>
       <?php endif; ?><!-- end content top -->
+      <?php if($sidebar_left): ?>
+        <div class="sidebar-left sidebar">
+          <?php print $sidebar_left; ?>
+        </div>
+      <?php endif; ?>
       <div id="main">
         <?php print $breadcrumb; ?>
         <?php if($content_inner): ?>
@@ -156,11 +161,6 @@
         <?php print $content; ?>
         </div><!-- end content -->
       </div><!-- end main -->
-      <?php if($sidebar_left): ?>
-        <div class="sidebar-left sidebar">
-          <?php print $sidebar_left; ?>
-        </div>
-      <?php endif; ?>
       <?php if($sidebar_right): ?>
         <div class="sidebar-right sidebar">
           <?php print $sidebar_right; ?>

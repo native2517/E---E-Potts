@@ -292,7 +292,7 @@ blockquote {
 }
 /*------content top-----------*/
 #container {
-    padding: 18px 15px;
+    padding: 18px 0px;
 }
 #content-top {
     background-color: #EF9F20;
@@ -346,6 +346,7 @@ blockquote {
 .has-sidebar-left .sidebar {
     float: left;
     padding: 10px 13px;
+    padding-left: 0px;
     width: 258px;
 }
 .has-sidebar-left #main {
@@ -356,6 +357,7 @@ blockquote {
 .has-sidebar-right .sidebar {
     float: right;
     padding: 10px 13px;
+    padding-right: 0px;
     width: 258px;
 }
 .has-sidebar-right #main {
@@ -364,6 +366,25 @@ blockquote {
     width: 616px;
 }
 
+.has-sidebar-both #main {
+    float: left;
+    padding: 10px 0;
+    width: 480px;
+}
+
+.has-sidebar-both .sidebar-left {
+    float: left;
+    padding: 10px 13px;
+    padding-left: 0px;
+    width: 200px;
+}
+
+.has-sidebar-both .sidebar-right {
+    float: right;
+    padding: 10px 13px;
+    padding-right: 0px;
+    width: 250px;
+}
 
 .right .sidebar {
     float: right;
@@ -1307,3 +1328,9 @@ div.status a:hover {
     font-family: Courier, mono;
 }
 /* @end */
+
+#block-1 {
+    float: right;
+    margin-right: 20px;
+    text-align: right;
+}

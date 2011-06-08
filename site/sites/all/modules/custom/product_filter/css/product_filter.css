@@ -24,3 +24,54 @@
 #block-product-block .form-submit {
     margin: 9px 0px;
 }
+
+#block-product-block-2 #edit-submit-1 {
+    margin-top: 10px;
+}
+
+#block-product-block-2 select {
+    width: 160px;
+}
+
+
+#block-product-block-2,
+#block-product-block-featured {
+    background-color: #EF9F20;
+    color: #FFFFFF;
+    padding: 20px;
+}
+
+#block-product-block-2 h3,
+#block-product-block-featured h3 {
+    padding-bottom: 20px;
+    color: #fff;
+    border-bottom: solid 1px #fff;
+}
+
+#block-product-block-featured ol,
+#block-product-block-featured ol li {
+    clear: both;
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}
+
+#block-product-block-featured ol li {
+    padding-top: 20px;
+}
+
+#block-product-block-featured ol li img {
+    margin-right: 20px;
+    float: left;
+}
+
+#block-product-block-featured ol li a {
+    color: #555555;
+}
+
+#block-product-block-featured ol li a:hover {
+    color: #555555;
+    text-decoration:underline;
+}
+
+
