@@ -172,7 +172,7 @@ function _product_filter_opts() {
 
 function _product_filter_brand_opts() {
 
-    $options = array();
+    $options = array("--- Select brand ---");
 
     $vocab = taxonomy_get_tree(BRAND_VID);
 
@@ -185,7 +185,7 @@ function _product_filter_brand_opts() {
 
 function _product_filter_type_opts() {
 
-    $options = array();
+    $options = array("--- Select type ---");
 
     $vocab = taxonomy_get_tree(TYPE_VID);
 
@@ -240,12 +240,14 @@ function product_filter_block_3_form($form) {
         '#type' => 'select',
         '#title' => t('Brand'),
         '#options' => _product_filter_brand_opts(),
+        '#default_value' => (isset($_GET["brand"])) ? $_GET["brand"] : NULL,
     );
 
     $form['type'] = array(
         '#type' => 'select',
         '#title' => t('Type'),
         '#options' => _product_filter_type_opts(),
+        '#default_value' => (isset($_GET["type"])) ? $_GET["type"] : NULL,
     );
 
     $form['submit'] = array('#type' => 'submit', '#value' => t('Search'));
@@ -257,5 +259,10 @@ function product_filter_block_3_form_submit($form, &$form_state) {
     
     $values = $form_state["values"];
 
-    drupal_goto("products/search", array("brand" => $values["brand"], "type" => $values["type"]));
+    $query = array();
+
+    if($values["brand"]) $query["brand"] = $values["brand"];
+    if($values["type"]) $query["type"] = $values["type"];
+
+    drupal_goto("products/search", $query);
 }
