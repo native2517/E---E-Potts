@@ -1,7 +1,26 @@
 #block-product-block {
+				position:relative;
     margin: 0px 0px 0px 10px !important;
     padding: 0px !important;
 }
+
+#block-product-block #autocomplete {
+				left:114px;
+}
+#block-product-block #autocomplete ul li {
+    border-top: 1px solid #E3E3E3;
+    color: #B9B9B9;
+    padding: 5px;
+}
+
+html.js #block-product-block input.form-autocomplete {
+    background-position: 99% 6px;
+}
+
+html.js #block-product-block input.form-autocomplete.throbbing {
+    background-position: 99% -14px;
+}
+
 
 #block-product-block .form-item {
     float: left;
