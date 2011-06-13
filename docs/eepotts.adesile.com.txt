@@ -1,0 +1,7 @@
+DATABASE: spectac3_eepotts
+USER: spectac3_eepotts
+PASS: SXv]w=f0.d~b.
+
+HTPASSWD
+USER: eepotts
+PASS: stagesite

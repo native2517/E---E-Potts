@@ -54,20 +54,6 @@
   <h2><a href="<?php print $node_url ?>" title="<?php print $title ?>"><?php print $title ?></a></h2>
   <?php endif; ?>
 
-  <?php if ($submitted || $terms): ?>
-  <div class="info">
-    <?php if ($submitted): ?>
-      <?php print $submitted; ?>  &mdash; 
-      <?php print theme('username', $node); ?>
-    <?php endif; ?>
-    <?php if ($terms): ?>
-      <div class="taxonomy">
-        <strong><?php print t('Filed under'); ?>:</strong> <?php print $terms; ?>
-      </div>
-    <?php endif;?>
-  </div>
-  <?php endif; ?>
-
   <div class="node-content">
     <?php print $content; ?>
     <?php if($node_inner): ?>

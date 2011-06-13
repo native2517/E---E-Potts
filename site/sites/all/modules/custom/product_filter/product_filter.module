@@ -14,7 +14,25 @@ function product_filter_menu() {
         'type' => MENU_SUGGESTED_ITEM,
     );
 
+    $items['products/filter'] = array(
+        'title' => 'Ajax results',
+        'description' => 'Ajax results, used for textfield filter.',
+        'page callback' => '_product_filter_ajax',
+        'access arguments' => array('access content'),
+        'type' => MENU_SUGGESTED_ITEM,
+    );
+
     return $items;
+}
+
+function _product_filter_ajax($string){
+				$matches = array();
+				$result = db_query_range("SELECT title FROM {node} WHERE type = 'product' AND LOWER(title) LIKE LOWER('%s%%')", $string, 0, 10);
+				while ($node = db_fetch_object($result)) {
+				$matches[$node->title] = check_plain($node->title);
+				}
+				print drupal_to_js($matches);
+				exit();
 }
 
 function product_filter_results() {
@@ -206,6 +224,7 @@ function product_filter_block_1($form) {
         '#size' => 60,
         '#maxlength' => 128,
         '#required' => TRUE,
+								'#autocomplete_path' => "products/filter"
     );
 
     $form['submit'] = array('#type' => 'submit', '#value' => t('Search'));

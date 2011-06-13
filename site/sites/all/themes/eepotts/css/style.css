@@ -352,7 +352,7 @@ blockquote {
 .has-sidebar-left #main {
     float: right;
     padding: 10px 0;
-    width: 616px;
+    width: 680px;
 }
 .has-sidebar-right .sidebar {
     float: right;
@@ -363,7 +363,7 @@ blockquote {
 .has-sidebar-right #main {
     float: left;
     padding: 10px 0;
-    width: 616px;
+    width: 680px;
 }
 
 .has-sidebar-both #main {
