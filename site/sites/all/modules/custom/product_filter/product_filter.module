@@ -25,17 +25,24 @@ function product_filter_menu() {
     return $items;
 }
 
-function _product_filter_ajax($string){
-				$matches = array();
-				$result = db_query_range("SELECT title FROM {node} WHERE type = 'product' AND LOWER(title) LIKE LOWER('%s%%')", $string, 0, 10);
-				while ($node = db_fetch_object($result)) {
-				$matches[$node->title] = check_plain($node->title);
-				}
-				print drupal_to_js($matches);
-				exit();
-}
-
 function product_filter_results() {
+
+    $matches = array();
+
+    if($_GET["type"] && $_GET["brand"]){
+        $result = db_query_range("SELECT nid FROM term_node WHERE tid = %d AND %d", $_GET["type"], $_GET["brand"]);
+    }
+    else if($_GET["type"]){
+        $result = db_query_range("SELECT nid FROM term_node WHERE tid = %d", $_GET["type"]);
+    }
+    else if($_GET["brand"]){
+        $result = db_query_range("SELECT nid FROM term_node WHERE tid = %d", $_GET["brand"]);
+    }
+
+    while ($node = db_fetch_object($result)) {
+        $matches[$node->title] = check_plain($node->title);
+    }
+
     return '';
 }
 
@@ -224,7 +231,7 @@ function product_filter_block_1($form) {
         '#size' => 60,
         '#maxlength' => 128,
         '#required' => TRUE,
-								'#autocomplete_path' => "products/filter"
+        '#autocomplete_path' => "products/filter"
     );
 
     $form['submit'] = array('#type' => 'submit', '#value' => t('Search'));
@@ -233,6 +240,7 @@ function product_filter_block_1($form) {
 }
 
 function product_filter_block_1_submit($form, &$form_state) {
+    _product_filter_process_form_values($form_state["values"]);
 }
 
 function product_filter_block_2($featured = array()) {
@@ -275,13 +283,39 @@ function product_filter_block_3_form($form) {
 }
 
 function product_filter_block_3_form_submit($form, &$form_state) {
-    
-    $values = $form_state["values"];
+    _product_filter_process_form_values($form_state["values"]);
+}
 
+function _product_filter_process_form_values($values) {
     $query = array();
 
-    if($values["brand"]) $query["brand"] = $values["brand"];
-    if($values["type"]) $query["type"] = $values["type"];
+    if ($values["brand"]) {
+        $query["brand"] = $values["brand"];
+    }
+    if ($values["type"]) {
+        $query["type"] = $values["type"];
+    }
+    if ($values["title"]) {
+        $result = db_query("SELECT title, nid FROM {node} WHERE type = 'product' AND title = '%s'", $values["title"]);
+        $node = db_fetch_object($result);
+
+        if($node){
+            drupal_goto("node/" . $node->nid);
+        }
+
+        $query["title"] = $values["title"];
+    }
+
 
     drupal_goto("products/search", $query);
+}
+
+function _product_filter_ajax($string) {
+    $matches = array();
+    $result = db_query_range("SELECT title FROM {node} WHERE type = 'product' AND LOWER(title) LIKE LOWER('%s%%')", $string, 0, 10);
+    while ($node = db_fetch_object($result)) {
+        $matches[$node->title] = check_plain($node->title);
+    }
+    print drupal_to_js($matches);
+    exit();
 }
