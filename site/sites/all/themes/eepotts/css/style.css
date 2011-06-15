@@ -108,7 +108,7 @@ code {
     -moz-border-radius: 10px;
 }
 p {
-    margin: 8px 0;
+    margin: 0 0 8px;
     line-height: 1.6em;
 }
 input[type=submit] {
@@ -332,6 +332,9 @@ blockquote {
 .breadcrumb {
     color: #999;
     padding: 0;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: solid 1px #e3e3e3;
 }
 .breadcrumb a {
     color: #999;
@@ -1290,8 +1293,8 @@ div.status a:hover {
 
 /*-----custom styling----*/
 .field-field-image {
-    float: left;
-    margin: 0px 10px 10px 0px;
+    float: right;
+    margin: 0px 0px 20px 20px;
 }
 
 /*-----fonts----*/

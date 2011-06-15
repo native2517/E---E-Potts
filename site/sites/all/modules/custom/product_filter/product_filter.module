@@ -6,6 +6,14 @@ define("BRAND_VID", 2);
 function product_filter_menu() {
     $items = array();
 
+//    $items['products'] = array(
+//        'title' => 'Products',
+//        'description' => 'Products.',
+//        'page callback' => 'product_filter_results',
+//        'access arguments' => array('access content'),
+//        'type' => MENU_SUGGESTED_ITEM,
+//    );
+
     $items['products/search'] = array(
         'title' => 'Search results',
         'description' => 'Product search results.',
@@ -26,24 +34,63 @@ function product_filter_menu() {
 }
 
 function product_filter_results() {
+    $items_per_page = 10;
 
     $matches = array();
 
-    if($_GET["type"] && $_GET["brand"]){
-        $result = db_query_range("SELECT nid FROM term_node WHERE tid = %d AND %d", $_GET["type"], $_GET["brand"]);
-    }
-    else if($_GET["type"]){
-        $result = db_query_range("SELECT nid FROM term_node WHERE tid = %d", $_GET["type"]);
-    }
-    else if($_GET["brand"]){
-        $result = db_query_range("SELECT nid FROM term_node WHERE tid = %d", $_GET["brand"]);
+    if ($_GET["type"] && $_GET["brand"]) {
+        $result = db_query("SELECT nid FROM term_node WHERE tid = {$_GET["type"]} OR tid = {$_GET["brand"]} GROUP BY nid HAVING COUNT(nid) = 2");
+        $count_result = db_query("SELECT nid FROM term_node WHERE tid = {$_GET["type"]} OR tid = {$_GET["brand"]} GROUP BY nid HAVING COUNT(*) = 2");
+        while ($data = db_fetch_object($count_result)) {
+            $count = $count + 1;
+        }
     }
 
-    while ($node = db_fetch_object($result)) {
-        $matches[$node->title] = check_plain($node->title);
+    if ($_GET["type"] && !$result) {
+        $result = pager_query("SELECT nid FROM term_node WHERE tid = {$_GET["type"]}", $items_per_page);
+        $count = db_fetch_object(db_query("SELECT COUNT(nid) as count FROM term_node WHERE tid = {$_GET["type"]}"))->count;
     }
 
-    return '';
+    if ($_GET["brand"] && !$result) {
+        $result = pager_query("SELECT nid FROM term_node WHERE tid = {$_GET["brand"]}", $items_per_page);
+        $count = db_fetch_object(db_query("SELECT COUNT(nid) as count FROM term_node WHERE tid = {$_GET["brand"]}"))->count;
+    }
+
+    if (!$_GET["type"] && !$_GET["brand"]) {
+        $result = pager_query("SELECT nid FROM node WHERE type = 'product'", $items_per_page);
+        $count = db_fetch_object(db_query("SELECT COUNT(nid) as count FROM node"))->count;
+    }
+
+    while ($data = db_fetch_object($result)) {
+        $matches[] = $data->nid;
+    }
+
+    $brand = ($_GET["brand"]) ? taxonomy_get_term($_GET["brand"])->name : NULL;
+    $type = ($_GET["type"]) ? taxonomy_get_term($_GET["type"])->name : NULL;
+
+    foreach ($matches as $nid) {
+
+        $node = node_load($nid);
+
+        $products[] = theme("product_item", array(
+                    'image' => theme('imagecache', 'product-thumbnail', $node->field_image[0]['filepath']),
+                    'title' => $node->title,
+                    'body' => $node->field_summary[0]["value"],
+                    'price' => "&pound" . number_format($node->field_price[0]['value'], 2),
+                    'path' => "node/{$node->nid}",
+                ));
+    }
+
+    $content = array(
+        "brand" => $brand,
+        "type" => $type,
+        "amount" => $count,
+    );
+
+    $output .= theme("product_filter_page", $products, $content);
+    $output .= theme('pager', NULL, $items_per_page);
+
+    return $output;
 }
 
 function product_filter_theme($existing, $type, $theme, $path) {
@@ -55,6 +102,21 @@ function product_filter_theme($existing, $type, $theme, $path) {
                 'products' => array(),
             ),
             'template' => 'featured_products',
+            'path' => $path,
+        ),
+        'product_item' => array(
+            'arguments' => array(
+                'product' => array(),
+            ),
+            'template' => 'product_item',
+            'path' => $path,
+        ),
+        'product_filter_page' => array(
+            'arguments' => array(
+                'products' => null,
+                'settings' => null,
+            ),
+            'template' => 'product_filter_page',
             'path' => $path,
         ),
     );
@@ -78,6 +140,11 @@ function product_filter_block($op = 'list', $delta = 0, $edit = array()) {
 
             $blocks['product_block_featured'] = array(
                 'info' => t('Product featured block'),
+                'weight' => 0,
+            );
+
+            $blocks['product_block_related'] = array(
+                'info' => t('Related Products'),
                 'weight' => 0,
             );
 
@@ -172,6 +239,21 @@ function product_filter_block($op = 'list', $delta = 0, $edit = array()) {
                     );
 
                     break;
+
+                case 'product_block_related':
+
+                    $featured = array(
+                        variable_get('product_block_featured_1', 0),
+                        variable_get('product_block_featured_2', 0),
+                        variable_get('product_block_featured_3', 0),
+                    );
+
+                    $block = array(
+                        'subject' => t('Related Products'),
+                        'content' => product_filter_block_related($featured),
+                    );
+
+                    break;
             }
 
             return $block;
@@ -197,7 +279,7 @@ function _product_filter_opts() {
 
 function _product_filter_brand_opts() {
 
-    $options = array("--- Select brand ---");
+    $options = array("--- All brands ---");
 
     $vocab = taxonomy_get_tree(BRAND_VID);
 
@@ -210,7 +292,7 @@ function _product_filter_brand_opts() {
 
 function _product_filter_type_opts() {
 
-    $options = array("--- Select type ---");
+    $options = array("--- All types ---");
 
     $vocab = taxonomy_get_tree(TYPE_VID);
 
@@ -243,10 +325,10 @@ function product_filter_block_1_submit($form, &$form_state) {
     _product_filter_process_form_values($form_state["values"]);
 }
 
-function product_filter_block_2($featured = array()) {
+function product_filter_block_2($nodes = array()) {
     $products = array();
 
-    foreach ($featured as $nid) {
+    foreach ($nodes as $nid) {
         $node = node_load($nid);
         $products[] = array(
             'image' => theme('imagecache', 'product-thumbnail', $node->field_image[0]['filepath']),
@@ -257,6 +339,24 @@ function product_filter_block_2($featured = array()) {
     }
 
     return theme("featured_products", $products);
+}
+
+function product_filter_block_related($nodes = array()) {
+    // get current node
+    $node = node_load(arg(1));
+
+    if (count($node->field_related)) {
+        $products = array();
+
+        foreach ($node->field_related as $nid) {
+            if ($nid) {
+                $product = node_load($nid);
+                $products[] = l($product->title, "node/{$product->nid}");
+            }
+        }
+
+        return (count($products)) ? theme("item_list", $products) : NULL;
+    }
 }
 
 function product_filter_block_3_form($form) {
@@ -299,7 +399,7 @@ function _product_filter_process_form_values($values) {
         $result = db_query("SELECT title, nid FROM {node} WHERE type = 'product' AND title = '%s'", $values["title"]);
         $node = db_fetch_object($result);
 
-        if($node){
+        if ($node) {
             drupal_goto("node/" . $node->nid);
         }
 

@@ -141,12 +141,6 @@
       <?php endif; ?>
       <div id="main">
         <?php print $breadcrumb; ?>
-        <?php if($content_inner): ?>
-          <div id="content-inner">
-            <?php print $content_inner; ?>
-            <div class="clear"> </div>
-          </div>
-        <?php endif; ?>
         <?php if (!empty($title)): ?>
           <h1 class="title"><?php print $title; ?></h1>
         <?php endif; ?> <!-- END TITLE -->
@@ -160,6 +154,12 @@
         <?php print $help; ?>
         <?php print $content; ?>
         </div><!-- end content -->
+        <?php if($content_inner): ?>
+          <div id="content-inner">
+            <?php print $content_inner; ?>
+            <div class="clear"> </div>
+          </div>
+        <?php endif; ?>
       </div><!-- end main -->
       <?php if($sidebar_right): ?>
         <div class="sidebar-right sidebar">

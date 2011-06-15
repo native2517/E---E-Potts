@@ -206,7 +206,7 @@ function phptemplate_preprocess_node(&$vars) {
     //individual node being displayed
     if ($vars['page']) {
         $vars['template_files'][] = 'node-page';
-        $vars['template_files'][] = 'node-' . $vars['node']->type . '-page';
+        $vars['template_files'][] = 'node-' . $vars['node']->type . '';
         $vars['template_files'][] = 'node-' . $vars['node']->nid . '-page';
     }
     //multiple nodes being displayed on one page in either teaser

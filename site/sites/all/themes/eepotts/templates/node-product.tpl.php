@@ -51,29 +51,20 @@
 ?>
 <div<?php print $attributes; ?>>
 
-  <?php if (!$page): ?>
-  <h2><a href="<?php print $node_url ?>" title="<?php print $title ?>"><?php print $title ?></a></h2>
-  <?php endif; ?>
-
-  <?php if ($submitted || $terms): ?>
-  <div class="info">
-    <?php if ($submitted): ?>
-      <?php print $submitted; ?>  &mdash; 
-      <?php print theme('username', $node); ?>
-    <?php endif; ?>
-    <?php if ($terms): ?>
-      <div class="taxonomy">
-        <strong><?php print t('Filed under'); ?>:</strong> <?php print $terms; ?>
-      </div>
-    <?php endif;?>
-  </div>
-  <?php endif; ?>
-
-  <div class="node-content">
-    <?php print $content; ?>
-  </div>
-
-  <div class="node-links">
-    <?php print $links; ?>
-  </div>
+    <div class="node-content">
+        <div class="product-image">
+<?php print $node->field_image[0]["view"]; ?>
+        </div>
+        <div class="product-text">
+            <p class="price"><b>Price</b>: <?php print $node->field_price[0]["view"]; ?></p>
+            <p class="part"><b>Part Number</b>: <?php print $node->field_part_number[0]["view"]; ?></p>
+            <?php foreach($node->taxonomy as $term): ?>
+            <p class="term"><?php print db_fetch_object(db_query("SELECT name FROM vocabulary WHERE vid = %d", $term->vid))->name; ?>: <?php print $term->name; ?></p>
+            <?php endforeach; ?>
+            <?php print $node->content["body"]["#value"]; ?>
+        </div>
+    </div>
+    <div class="node-links">
+<?php print $links; ?>
+    </div>
 </div>
